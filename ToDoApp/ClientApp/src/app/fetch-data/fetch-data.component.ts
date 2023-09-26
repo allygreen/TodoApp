@@ -7,11 +7,30 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FetchDataComponent {
   public todo: ToDoList[] = [];
+  public newTodo: Partial<ToDoList> = {};
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<ToDoList[]>(baseUrl + 'todo').subscribe(result => {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+    this.fetchTodos();
+  }
+
+  fetchTodos(): void {
+    this.http.get<ToDoList[]>(this.baseUrl + 'todo').subscribe(result => {
       this.todo = result;
     }, error => console.error(error));
+  }
+
+  addTodo(): void {
+    if (!this.newTodo.title || !this.newTodo.summary) {
+      console.error('Title and Summary are required.');
+      return;
+    }
+    this.http.post<ToDoList>(this.baseUrl + 'todo', this.newTodo).subscribe(
+      result => {
+        this.todo.push(result);
+        this.newTodo = {};  // Reset the newTodo object
+      },
+      error => console.error(error)
+    );
   }
 }
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ToDoApp.Models;
+using ToDoApp.Services;
 
 namespace ToDoApp.Controllers;
 
@@ -7,28 +8,20 @@ namespace ToDoApp.Controllers;
 [Route("[controller]")]
 public class ToDoController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
+    private IDataAccess _dataAccess;
     private readonly ILogger<ToDoController> _logger;
 
-    public ToDoController(ILogger<ToDoController> logger)
+    public ToDoController(ILogger<ToDoController> logger, IDataAccess dataAccess)
     {
         _logger = logger;
+        _dataAccess = dataAccess;
     }
 
     [HttpGet]
-    public IEnumerable<ToDo> Get()
+    public async Task<IActionResult> GetAsync()
     {
-        return Enumerable.Range(1, 5).Select(index => new ToDo()
-            {
-                createdDate = DateTime.Now,
-                Title = "Title",
-                Summary = "Summary"
-            })
-            .ToArray();
+        var toDoList = await _dataAccess.GetToDoListAsync();
+        return Ok(toDoList);
     }
     
     [HttpPost]
