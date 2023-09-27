@@ -25,8 +25,9 @@ public class ToDoController : ControllerBase
     }
     
     [HttpPost]
-    public Task<IActionResult> Post()
+    public async Task<IActionResult> Post(ToDo newToDo)
     {
-        return Task.FromResult((IActionResult) Ok());
+        await _dataAccess.SaveNoteAsync(newToDo);
+        return Ok();
     }
 }

@@ -1,3 +1,4 @@
+using ToDoApp.Data;
 using ToDoApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDataAccess, DataAccess>();
+builder.Services.AddDbContext<NoteContext>();
 
 var app = builder.Build();
 

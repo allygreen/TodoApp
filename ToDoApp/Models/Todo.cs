@@ -2,6 +2,7 @@ namespace ToDoApp.Models;
 
 public class ToDo
 {
+    public int ToDoId { get; set; }
     public DateTime createdDate { get; set; }
     
     public bool Completed { get; set; }

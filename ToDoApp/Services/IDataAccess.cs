@@ -6,5 +6,5 @@ public interface IDataAccess
 {
     Task<List<ToDo>>GetToDoListAsync();
 
-    Task<ToDo> SaveNoteAsync(ToDo newItemToDo);
+    Task<bool> SaveNoteAsync(ToDo newItemToDo);
 }

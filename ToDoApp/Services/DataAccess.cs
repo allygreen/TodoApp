@@ -1,28 +1,36 @@
+using Microsoft.EntityFrameworkCore;
 using ToDoApp.Models;
 
 namespace ToDoApp.Services;
 
+using Data;
+
 public class DataAccess : IDataAccess
 {
-    public Task<List<ToDo>> GetToDoListAsync()
+    public NoteContext _dbContext;
+    public DataAccess(NoteContext noteContext)
     {
-        return Task.FromResult(new List<ToDo>()
-        {
-            new ToDo()
-            {
-                Completed = true,
-                createdDate = DateTime.Today,
-                dateCompleted = DateTime.Today,
-                Title = "New Note",
-                Description = "Here's a description",
-                Summary = "Summary!"
-            }
-        });
+        _dbContext = noteContext;
+    }
+    
+    public async Task<List<ToDo>> GetToDoListAsync()
+    {
+        return await _dbContext.Notes.ToListAsync();
+        
     }
 
-    public Task<ToDo> SaveNoteAsync(ToDo newItemToDo)
+    public async Task<bool> SaveNoteAsync(ToDo newItemToDo)
     {
-
-        return Task.FromResult(new ToDo());
+        try
+        {
+            await _dbContext.AddAsync(newItemToDo);
+            await _dbContext.SaveChangesAsync(true);
+            return true;
+        }
+        catch (Exception ex)
+        {
+           // _logger.LogError(ex, "Error creating app");
+            return false;
+        }
     }
 }
