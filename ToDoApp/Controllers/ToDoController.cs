@@ -30,4 +30,11 @@ public class ToDoController : ControllerBase
         await _dataAccess.SaveNoteAsync(newToDo);
         return Ok();
     }
+    
+    [HttpPut]
+    public async Task<IActionResult> Put(ToDo updatedToDo)
+    {
+        await _dataAccess.UpdateNoteAsync(updatedToDo);
+        return Ok();
+    }
 }

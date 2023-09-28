@@ -33,4 +33,33 @@ public class DataAccess : IDataAccess
             return false;
         }
     }
+    public async Task<bool> UpdateNoteAsync(ToDo updatedToDo)
+    {
+        try
+        {
+            var existingToDo = await _dbContext.Notes.FirstOrDefaultAsync(n => n.ToDoId == updatedToDo.ToDoId);
+            if (existingToDo == null)
+            {
+                return false; 
+            }
+
+            // Updating properties all of them - maybe better as an attach
+            existingToDo.createdDate = updatedToDo.createdDate;
+            existingToDo.Completed = updatedToDo.Completed;
+            existingToDo.Summary = updatedToDo.Summary;
+            existingToDo.Description = updatedToDo.Description;
+            existingToDo.Title = updatedToDo.Title;
+            existingToDo.dateCompleted = updatedToDo.dateCompleted;
+
+            _dbContext.Notes.Update(existingToDo); 
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // _logger.LogError(ex, "Error updating note");
+            return false;
+        }
+    }
+
 }
