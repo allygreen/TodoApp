@@ -11,6 +11,7 @@
 
 <!-- Conditional display of the form using ngIf -->
 <form *ngIf="showForm" (ngSubmit)="addTodo()" class="todo-form">
+  <!-- Form inputs for adding a new todo -->
   <div class="form-group">
     <label for="title">Title:</label>
     <input type="text" id="title" [(ngModel)]="newTodo.title" name="title" required>
@@ -34,26 +35,43 @@
   <button type="submit">Add Todo</button>
 </form>
 
-
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="todo.length">
+<table class="table table-striped" aria-labelledby="tableLabel" *ngIf="todo.length">
   <thead>
-    <tr>
-      <th>Created Date</th>
-      <th>Title</th>
-      <th>Summary</th>
-      <th>Description</th>
-      <th>Completed</th>
-      <th>Date Completed</th>
-    </tr>
+  <tr>
+    <th>Created Date</th>
+    <th>Title</th>
+    <th>Summary</th>
+    <th>Description</th>
+    <th>Completed</th>
+    <th>Date Completed</th>
+  </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let t of todo">
-      <td>{{ t.createdDate }}</td>
-      <td>{{ t.title }}</td>
-      <td>{{ t.summary }}</td>
-      <td>{{ t.description }}</td>
-      <td>{{ t.completed }}</td>
-      <td>{{ t.dateCompleted }}</td>
-    </tr>
+  <tr *ngFor="let t of todo">
+    <td (click)="editCell('createdDate', t)" *ngIf="editingField !== 'createdDate'">{{ t.createdDate }}</td>
+    <td *ngIf="editingField === 'createdDate'">
+      <input type="text" [(ngModel)]="t.createdDate" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()">
+    </td>
+    <td (click)="editCell('title', t)" *ngIf="editingField !== 'title'">{{ t.title }}</td>
+    <td *ngIf="editingField === 'title'">
+      <input type="text" [(ngModel)]="t.title" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()">
+    </td>
+    <td (click)="editCell('summary', t)" *ngIf="editingField !== 'summary'">{{ t.summary }}</td>
+    <td *ngIf="editingField === 'summary'">
+      <input type="text" [(ngModel)]="t.summary" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()">
+    </td>
+    <td (click)="editCell('description', t)" *ngIf="editingField !== 'description'">{{ t.description }}</td>
+    <td *ngIf="editingField === 'description'">
+      <textarea [(ngModel)]="t.description" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()"></textarea>
+    </td>
+    <td (click)="editCell('completed', t)" *ngIf="editingField !== 'completed'">{{ t.completed }}</td>
+    <td *ngIf="editingField === 'completed'">
+      <input type="checkbox" [(ngModel)]="t.completed" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()">
+    </td>
+    <td (click)="editCell('dateCompleted', t)" *ngIf="editingField !== 'dateCompleted'">{{ t.dateCompleted }}</td>
+    <td *ngIf="editingField === 'dateCompleted'">
+      <input type="date" [(ngModel)]="t.dateCompleted" (blur)="saveCell(t)" (keydown.enter)="saveCell(t)" (keydown.esc)="cancelEdit()">
+    </td>
+  </tr>
   </tbody>
 </table>
