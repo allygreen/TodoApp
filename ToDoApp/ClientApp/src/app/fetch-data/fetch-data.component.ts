@@ -43,7 +43,7 @@ export class FetchDataComponent {
   // Function to save changes made to a cell
   saveCell(todoItem: ToDoList): void {
     // Send a PUT request to update the backend with the changes
-    this.http.put<ToDoList>(this.baseUrl + 'todo/' + todoItem.id, todoItem).subscribe(
+    this.http.put<ToDoList>(this.baseUrl + 'todo', todoItem).subscribe(
       updatedTodo => {
         // Update the item in the todo list with the updated data from the server
         const index = this.todo.findIndex(item => item.id === updatedTodo.id);
