@@ -23,6 +23,7 @@ public class DataAccess : IDataAccess
     {
         try
         {
+            newItemToDo.createdDate = DateTime.Now;
             await _dbContext.AddAsync(newItemToDo);
             await _dbContext.SaveChangesAsync(true);
             return true;
@@ -33,14 +34,19 @@ public class DataAccess : IDataAccess
             return false;
         }
     }
-    public async Task<bool> UpdateNoteAsync(ToDo updatedToDo)
+    public async Task<ToDo> UpdateNoteAsync(ToDo updatedToDo)
     {
         try
         {
             var existingToDo = await _dbContext.Notes.FirstOrDefaultAsync(n => n.ToDoId == updatedToDo.ToDoId);
             if (existingToDo == null)
             {
-                return false; 
+                // new note
+                updatedToDo.createdDate = DateTime.Now;
+                await _dbContext.Notes.AddAsync(updatedToDo); 
+                await _dbContext.SaveChangesAsync();
+                
+                return updatedToDo;
             }
 
             // Updating properties all of them - maybe better as an attach
@@ -53,12 +59,12 @@ public class DataAccess : IDataAccess
 
             _dbContext.Notes.Update(existingToDo); 
             await _dbContext.SaveChangesAsync();
-            return true;
+            return existingToDo;
         }
         catch (Exception ex)
         {
             // _logger.LogError(ex, "Error updating note");
-            return false;
+            return null;
         }
     }
 

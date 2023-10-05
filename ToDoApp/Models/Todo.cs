@@ -13,5 +13,5 @@ public class ToDo
     
     public string Title { get; set; }
     
-    public DateTime dateCompleted { get; set; }
+    public DateTime? dateCompleted { get; set; }
 }
